@@ -1,14 +1,12 @@
+use crate::mem;
+use bevy::math::{vec2, vec3};
 #[allow(unused_variables)]
 use bevy::prelude::*;
-use bevy::{
-    ecs::component,
-    math::{vec2, vec3},
-};
 
 #[derive(Component)]
-struct Tile {
+pub struct Tile {
     color: Color,
-    loc: Vec2,
+    pub grid_cords: mem::val::gridLocation,
 }
 
 pub fn setup(
@@ -57,8 +55,6 @@ pub fn spawn_chessboard(
                 Color::srgb(0.0, 0.0, 0.0) // Schwarz
             };
 
-            println!("Color: {:?}", color);
-
             commands.spawn((
                 Mesh3d(meshes.add(Mesh::from(Plane3d::new(
                     vec3(0.0, 1.0, 0.0),
@@ -72,7 +68,7 @@ pub fn spawn_chessboard(
                 ),
                 Tile {
                     color,
-                    loc: vec2(x as f32, z as f32),
+                    grid_cords: mem::val::gridLocation::new(x as i8, z as i8),
                 },
             ));
         }

@@ -1,14 +1,20 @@
 #[allow(unused_mut)]
 use ::bevy::prelude::*;
+use bevy::{
+    color::palettes::tailwind::*, ecs::component, picking::pointer::PointerInteraction, prelude::*,
+};
 use bevy_flycam::prelude::*;
 
+mod Components;
+mod mem;
 mod systems;
 fn main() {
     App::new()
         // .add_plugins(NoCameraPlayerPlugin)
-        .add_plugins(DefaultPlugins)
+        .add_plugins((DefaultPlugins, MeshPickingPlugin))
         .add_systems(Startup, systems::setup::setup)
         .add_systems(Startup, systems::setup::spawn_chessboard)
+        .add_systems(PostStartup, Components::pawn::spawn_pawn)
         // .add_plugins(PlayerPlugin)
         // debug camera
         .run();
