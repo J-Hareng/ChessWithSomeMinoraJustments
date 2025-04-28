@@ -1,5 +1,5 @@
 use bevy::prelude::*;
-#[derive(Clone)] //
+#[derive(Clone, PartialEq, Copy)] //
 pub struct gridLocation {
     pub x: i8,
     pub y: i8,

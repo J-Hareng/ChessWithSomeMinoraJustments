@@ -8,6 +8,7 @@ pub fn setup(
     mut commands: Commands,
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<StandardMaterial>>,
+    asset_server: Res<AssetServer>,
 ) {
     // Schachbrett erstellen
     // light
@@ -18,51 +19,21 @@ pub fn setup(
         },
         Transform::from_xyz(4.0, 8.0, 4.0),
     ));
-    // commands.spawn((
-    //     Mesh3d(meshes.add(Cuboid::new(1.0, 1.0, 1.0))),
-    //     MeshMaterial3d(materials.add(Color::srgb_u8(124, 144, 255))),
-    //     Transform::from_xyz(0.0, 0.5, 0.0),
-    // ));
 
     //  camera
     commands.spawn((
         Camera3d::default(),
         Transform::from_xyz(0., 4.5, 9.0).looking_at(Vec3::ZERO, Vec3::Y),
     ));
-}
+    commands.spawn((
+        SceneRoot(
+            asset_server.load(
+                GltfAssetLabel::Scene(0).from_asset("models/SiehtSchonAusWieEinButtplug.gltf"),
+            ),
+        ),
+        Transform::from_xyz(0.0, 0.0, 0.0),
+        MeshMaterial3d(materials.add(Color::srgb_u8(124, 0, 255))),
+    ));
 
-pub fn spawn_chessboard(
-    mut commands: Commands,
-    mut meshes: ResMut<Assets<Mesh>>,
-    mut materials: ResMut<Assets<StandardMaterial>>,
-) {
-    let tile_size = 1.0;
-    let board_size = 8;
-    let gap = 10.0;
-
-    for x in 0..board_size {
-        for z in 0..board_size {
-            let is_white = (x + z) % 2 == 0;
-
-            let color = if is_white {
-                Color::srgb(1.0, 1.0, 1.0) // Weiß
-            } else {
-                Color::srgb(0.0, 0.0, 0.0) // Schwarz
-            };
-
-            commands.spawn((
-                Mesh3d(meshes.add(Mesh::from(Plane3d::new(
-                    vec3(0.0, 1.0, 0.0),
-                    vec2(tile_size * 0.4, tile_size * 0.4),
-                )))),
-                MeshMaterial3d(materials.add(color)),
-                Transform::from_xyz(
-                    (x as f32) - (board_size as f32 / 2.0) + 0.5,
-                    0.0,
-                    z as f32 - (board_size as f32 / 2.0) + 0.5,
-                ),
-                Tile::new(color, mem::val::gridLocation::new(x as i8, z as i8)),
-            ));
-        }
-    }
+    commands.spawn(crate::comp::gamestate::gamestate::new());
 }

@@ -15,13 +15,16 @@ pub struct Pawn {
     pev: i8,
     position: mem::val::gridLocation,
     color: Color,
+    pub selected: bool,
 }
+
 impl Pawn {
     pub fn new(pev: i8, position: mem::val::gridLocation, color: Color) -> Self {
         Pawn {
             pev,
             position,
             color,
+            selected: false,
         }
     }
 }
@@ -32,7 +35,6 @@ pub fn spawn_pawn(
     mut materials: ResMut<Assets<StandardMaterial>>,
     mut meshes: ResMut<Assets<Mesh>>,
 ) {
-    println!("Spawning Pawns");
     for (tile, transform) in query.iter() {
         let tile_loc = &tile.grid_cords;
         println!("Tile: {:?}", tile_loc);
@@ -72,10 +74,29 @@ fn update_material_on<E>(
     }
 }
 
-fn select_pawn(t: Trigger<Pointer<Down>>, mut query: Query<&mut Transform>) {
-    println!("Selected Pawn");
+fn select_pawn(
+    t: Trigger<Pointer<Down>>,
+    mut query: Query<&mut Transform>,
+    mut pawn_query: Query<&mut Pawn>,
+    mut gamestate_query: Query<&mut crate::comp::gamestate::gamestate>,
+) {
     let mut transform = query.get_mut(t.entity()).unwrap();
-    if (transform.translation.y >= PAWN_Y_OFFSET + 0.1) {
+
+    let mut pawn = pawn_query.get_mut(t.entity()).unwrap();
+
+    let mut gamestate = gamestate_query.get_single_mut().unwrap();
+
+    if gamestate.Selected_pawn.is_none() {
+        pawn.selected = true;
+        gamestate.Selected_pawn = Some(pawn.position.clone());
+    } else if gamestate.Selected_pawn == Some(pawn.position) {
+        pawn.selected = false;
+        gamestate.Selected_pawn = None;
+    } else {
+        return;
+    }
+
+    if transform.translation.y >= PAWN_Y_OFFSET + 0.1 {
         transform.translation.y = PAWN_Y_OFFSET;
     } else {
         transform.translation.y = 0.5

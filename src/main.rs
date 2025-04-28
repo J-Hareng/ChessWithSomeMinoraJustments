@@ -13,10 +13,10 @@ fn main() {
         // .add_plugins(NoCameraPlayerPlugin)
         .add_plugins((DefaultPlugins, MeshPickingPlugin))
         .add_systems(Startup, systems::setup::setup)
-        .add_systems(Startup, systems::setup::spawn_chessboard)
+        .add_systems(Startup, comp::tile::spawn_chessboard)
         .add_systems(PostStartup, comp::pawn::spawn_pawn)
-        .add_plugins(PlayerPlugin)
         // debug camera
+        .add_plugins(PlayerPlugin)
         .run();
 }
 
