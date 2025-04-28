@@ -5,7 +5,7 @@ use bevy::{
 };
 use bevy_flycam::prelude::*;
 
-mod Components;
+mod comp;
 mod mem;
 mod systems;
 fn main() {
@@ -14,16 +14,14 @@ fn main() {
         .add_plugins((DefaultPlugins, MeshPickingPlugin))
         .add_systems(Startup, systems::setup::setup)
         .add_systems(Startup, systems::setup::spawn_chessboard)
-        .add_systems(PostStartup, Components::pawn::spawn_pawn)
-        // .add_plugins(PlayerPlugin)
+        .add_systems(PostStartup, comp::pawn::spawn_pawn)
+        .add_plugins(PlayerPlugin)
         // debug camera
         .run();
 }
 
 // /// set up a simple 3D scene
 // fn setup(
-//     mut commands: Commands,
-//     mut meshes: ResMut<Assets<Mesh>>,
 //     mut materials: ResMut<Assets<StandardMaterial>>,
 // ) {
 //     // circular base

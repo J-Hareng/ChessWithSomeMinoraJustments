@@ -4,6 +4,7 @@ pub struct gridLocation {
     pub x: i8,
     pub y: i8,
 }
+
 impl gridLocation {
     pub fn new(x: i8, y: i8) -> Self {
         gridLocation { x, y }

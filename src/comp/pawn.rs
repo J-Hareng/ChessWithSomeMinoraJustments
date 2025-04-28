@@ -27,7 +27,7 @@ impl Pawn {
 }
 
 pub fn spawn_pawn(
-    query: Query<(&systems::setup::Tile, &Transform)>,
+    query: Query<(&crate::comp::tile::Tile, &Transform)>,
     mut commands: Commands,
     mut materials: ResMut<Assets<StandardMaterial>>,
     mut meshes: ResMut<Assets<Mesh>>,
@@ -78,8 +78,7 @@ fn select_pawn(t: Trigger<Pointer<Down>>, mut query: Query<&mut Transform>) {
     if (transform.translation.y >= PAWN_Y_OFFSET + 0.1) {
         transform.translation.y = PAWN_Y_OFFSET;
     } else {
-        transform.translation.y = 0.5;
+        transform.translation.y = 0.5
     }
-
     // Do something with the selected pawn
 }

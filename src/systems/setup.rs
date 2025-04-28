@@ -1,13 +1,8 @@
+use crate::comp::tile::*;
 use crate::mem;
 use bevy::math::{vec2, vec3};
 #[allow(unused_variables)]
 use bevy::prelude::*;
-
-#[derive(Component)]
-pub struct Tile {
-    color: Color,
-    pub grid_cords: mem::val::gridLocation,
-}
 
 pub fn setup(
     mut commands: Commands,
@@ -66,10 +61,7 @@ pub fn spawn_chessboard(
                     0.0,
                     z as f32 - (board_size as f32 / 2.0) + 0.5,
                 ),
-                Tile {
-                    color,
-                    grid_cords: mem::val::gridLocation::new(x as i8, z as i8),
-                },
+                Tile::new(color, mem::val::gridLocation::new(x as i8, z as i8)),
             ));
         }
     }
